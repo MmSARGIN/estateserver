@@ -1,15 +1,15 @@
 const express = require('express');
 const app = express();
+require('dotenv').config()
 const bodyParser = require('body-parser');
 const https = require('https');
 const { createEstate, getEstate } = require('./pg');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-
 const options = {
     method: 'GET',
-    headers: { 'Authorization': `Bearer 00D8d000005BGrx!AQEAQNp6M_VQ1cSM.XRuAfj1EUt2ojbWDEx_9e454vbfKTSSH0gc25kSPmCihQY7_s6M8HXECi_f1nvdRGk_4q3PF0PWJxQM` },
+    headers: { 'Authorization': `Bearer ${process.env.BEARER}` },
 };
 
 let info;
@@ -45,18 +45,23 @@ app.get('/', (request, response) => {
 
     //     }
     //     )
-
-    for (let i = 0; i < info.length; i++) {
-        estate = info[i];
-        createEstate(estate)
-            .then(response => {
-                console.log('OLDU');
-            })
-            .catch(error => {
-                console.log('error mal : ', error);
-            })
+    if (info) {
+        for (let i = 0; i < info.length; i++) {
+            estate = info[i];
+            createEstate(estate)
+                .then(response => {
+                    console.log('OLDU');
+                })
+                .catch(error => {
+                    console.log('error mal : ', error);
+                })
+        }
+        response.send(info);
+    } else {
+        response.send('Refresh Page');
     }
-    response.send(info);
+
+
 });
 
 app.listen(3000, () => {
