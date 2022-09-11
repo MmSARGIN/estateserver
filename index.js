@@ -14,27 +14,29 @@ const options = {
 
 let info;
 let estate;
-const req = https.request("https://rea3-dev-ed.my.salesforce.com/services/apexrest/Property", options, res => {
-    console.log(`statusCode: ${res.statusCode}`);
-    let body = "";
-    res.on('data', d => {
-        body += d;
-    });
-    res.on("end", () => {
-        try {
-            info = JSON.parse(body);
-        } catch (error) {
-            console.error(error.message);
-        };
-    });
-});
-req.on('error', error => {
-    console.error(error);
-});
-req.end();
+
 
 app.get('/', (request, response) => {
-    response.send(info);
+
+    const req = https.request("https://rea3-dev-ed.my.salesforce.com/services/apexrest/Property", options, res => {
+        console.log(`statusCode: ${res.statusCode}`);
+        let body = "";
+        res.on('data', d => {
+            body += d;
+        });
+        res.on("end", () => {
+            try {
+                info = JSON.parse(body);
+
+            } catch (error) {
+                console.error(error.message);
+            };
+        });
+    });
+    req.on('error', error => {
+        console.error(error);
+    });
+    req.end();
 
     // getEstate()
     //     .then(res => {
@@ -54,7 +56,7 @@ app.get('/', (request, response) => {
                 console.log('error mal : ', error);
             })
     }
-
+    response.send(info);
 });
 
 app.listen(3000, () => {

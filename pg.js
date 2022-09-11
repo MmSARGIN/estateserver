@@ -1,12 +1,15 @@
 const Pool = require('pg').Pool
+require('dotenv').config()
 const pool = new Pool({
-    user: 'postgres',
-    host: 'localhost',
-    database: 'realestate',
-    password: 'melih',
+    user: process.env.USER_NAME,
+    host: process.env.HOST,
+    database: process.env.DATABASE,
+    password: process.env.PASSWORD,
     port: 5432,
 });
 let records;
+console.log('env', process.env.USER_NAME);
+
 
 // const getEstate = (body) => {
 
